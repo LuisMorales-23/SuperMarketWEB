@@ -26,18 +26,38 @@ namespace SuperMarketWEB.Pages.Categories
 				return NotFound();
 			}
 
-			var category = await _context.Categories.FindAsync(id);
+			var category = await _context.Categories.FirstOrDefaultAsync(m => m.Id == id);
 			{
-				if (category != null)
+				if (category == null)
 				{
-					Category = category;
-					_context.Categories.Remove(Category);
-					await _context.SaveChangesAsync();
+					return NotFound();
 
 				}
+				else
+				{
+					Category = category;
+				}
 
-				return RedirectToPage("./Index");
+				return Page();
 			}
+		}
+
+		public async Task<IActionResult> OnPostAsync (int? id)
+		{
+			if (id == null || _context.Categories == null)
+			{
+				return NotFound();
+			}
+			var category = await _context.Categories.FindAsync(id);
+
+			 if (category != null)
+			 {
+				Category = category;
+				_context.Categories.Remove(category);
+				await _context.SaveChangesAsync();
+ 
+			 }
+			 return RedirectToPage("./Index");
 		}
 	}
 }
