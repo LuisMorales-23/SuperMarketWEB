@@ -35,40 +35,40 @@ namespace SuperMarketWEB.Pages.Products
 					return NotFound();
 				}
 
-				Product = Product;
-				return Page();
-			}
-		public async Task<IActionResult> OnPostAsync()
-		{
-			if (!ModelState.IsValid)
-			{
 				return Page();
 			}
 
-			_context.Attach(Product).State = EntityState.Modified;
-
-			try
+			public async Task<IActionResult> OnPostAsync()
 			{
-				await _context.SaveChangesAsync();
+				if (!ModelState.IsValid)
+				{
+					return Page();
+				}
+
+				_context.Attach(Product).State = EntityState.Modified;
+
+				try
+				{
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!CategoryExists(Product.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToPage("./Index");
 			}
-			catch (DbUpdateConcurrencyException)
+
+			private bool CategoryExists(int id)
 			{
-				if (!CategoryExists(Product.Id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
+				return (_context.Products?.Any(o => o.Id == id)).GetValueOrDefault();
 			}
-			return RedirectToPage("./Index");
-		}
 
-		private bool CategoryExists(int id)
-		{
-			return (_context.Products?.Any(o => o.Id == id)).GetValueOrDefault();
 		}
-
-	}
 }
