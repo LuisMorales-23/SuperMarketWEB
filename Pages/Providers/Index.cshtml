@@ -1,4 +1,4 @@
-﻿﻿@page
+﻿@page
 @model SupermarketWEB.Pages.Provider.IndexModel
 @{
     ViewData["Title"] = "Index Categories";
@@ -21,9 +21,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Provider[0].Observation)
-            </th>
-            
-            </th>
+           
             <th>Actions</th>
         </tr>
     </thead>
@@ -43,7 +41,9 @@
                 <td>
           
                 <td>
-                    
+                   
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                
                 </td>
             </tr>
         }
