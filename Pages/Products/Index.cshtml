@@ -3,9 +3,10 @@
 @{
 	ViewData["Title"] = "Index Products";
 }
-<h1>Index Categories</h1>
+<h1>Index Products</h1>
 <p>
 	<a asp-page="Create" class="btn btn-success">Create New</a>
+
 </p>
 
 <table class="table">
@@ -20,7 +21,9 @@
 			<th>
 				@Html.DisplayNameFor(model => model.Products[0].Stock)
 			</th>
-
+			<th>
+				@Html.DisplayNameFor(model => model.Products[0].CategoryId)
+			</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
@@ -38,6 +41,10 @@
 					@Html.DisplayFor(modelitem => item.Stock)
 				</td>
 				<td>
+					@Html.DisplayFor(modelitem => item.CategoryId)
+				</td>
+				<td>
+						<a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
 					
 				</td>
 			</tr>
