@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using SuperMarketWEB.Data;
 using SuperMarketWEB.Models;
 using System.Security.Claims;
@@ -24,8 +25,11 @@ namespace SuperMarketWEB.Pages.Account
         public User User { get; set; }
         public async Task<IActionResult> OnPostAsync()
         {
-            
-            if (!ModelState.IsValid || _context.Users== null || User == null)
+            if (!ModelState.IsValid) return Page();
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailAddress == User.EmailAddress && u.Password == User.Password);
+
+            if ( User != null )
             {
                 //se crea los claim, datos a almacenar en la cookie
                 var claims = new List<Claim>
