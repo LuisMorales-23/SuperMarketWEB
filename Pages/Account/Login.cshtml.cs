@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SuperMarketWEB.Data;
 using SuperMarketWEB.Models;
+using System.Security.Claims;
 
 namespace SuperMarketWEB.Pages.Account
 {
@@ -13,16 +15,42 @@ namespace SuperMarketWEB.Pages.Account
             _context = context;
         }
 
-        [BindProperty]
-
-        public User User { get; set; }
+        
         public void OnGet()
         {
         }
-
-        public void OnPost()
+        
+        [BindProperty]
+        public User User { get; set; }
+        public async Task<IActionResult> OnPostAsync()
         {
-            Console.WriteLine("User:" + User.Email + "Password : " + User.Password);
+            
+            if (!ModelState.IsValid || _context.Users== null || User == null)
+            {
+                //se crea los claim, datos a almacenar en la cookie
+                var claims = new List<Claim>
+                {
+                    new Claim (ClaimTypes.Name, "admin"),
+                    new Claim(ClaimTypes.Email,User.EmailAddress),
+                };
+
+                //se asocia a los claims creados a un nombre de una cokkie 
+                var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+                //Se agrega la  identidad creada al claimsprincipal de la aplicacion 
+                ClaimsPrincipal claimsprincipal = new ClaimsPrincipal(identity);
+
+                //se registra exitosamente la autenticacion y se crea la cookie en el navegador
+                await HttpContext.SignInAsync("MyCookieAuth", claimsprincipal);
+
+
+                return RedirectToPage("/Index");
+
+            }
+
+            _context.Users.Add(User);
+            await _context.SaveChangesAsync();
+
+            return Page();
         }
     }
 }
