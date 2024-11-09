@@ -6,9 +6,10 @@ using SuperMarketWEB.Models;
 
 namespace SuperMarketWEB.Pages.Products
 {
-	public class CreateModel : PageModel
+    [Authorize]
+    public class CreateModel : PageModel
 	{
-        [Authorize]
+       
         private readonly SupermarketContext _context;
 		public CreateModel(SupermarketContext context)
 		{

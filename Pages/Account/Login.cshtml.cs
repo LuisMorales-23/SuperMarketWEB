@@ -27,14 +27,15 @@ namespace SuperMarketWEB.Pages.Account
         {
             if (!ModelState.IsValid) return Page();
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailAddress == User.EmailAddress && u.Password == User.Password);
+            var user = await _context.Users.FirstOrDefaultAsync(u => 
+            u.EmailAddress == User.EmailAddress && u.Password == User.Password);
 
-            if ( User != null )
+            if ( user != null )
             {
                 //se crea los claim, datos a almacenar en la cookie
                 var claims = new List<Claim>
                 {
-                    new Claim (ClaimTypes.Name, "admin"),
+                    new Claim (ClaimTypes.Name, " "),
                     new Claim(ClaimTypes.Email,User.EmailAddress),
                 };
 
